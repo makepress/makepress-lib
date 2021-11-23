@@ -3,7 +3,7 @@ _default:
 
 # Runs clippy on the source
 check:
-    cargo clippy --locked -- -D warnings
+    cargo clippy -- -D warnings
 
 # Runs unit tests
 test:
