@@ -1,0 +1,40 @@
+version: 2.1
+
+workflows:
+  version: 2
+  rust:
+    jobs:
+      - check:
+          context: [aws]
+      - test:
+          context: [aws]
+      - udeps:
+          context: [aws]
+      - makepress-orb/release-please-single:
+          context: [lulubot]
+jobs:
+  check:
+    executor: makepress-orb/rust
+    steps:
+      - checkout
+      - makepress-orb/with-rust:
+          steps:
+            - run: just check
+  test:
+    executor: makepress-orb/rust
+    steps:
+      - checkout
+      - makepress-orb/with-rust:
+          steps:
+            - run: just test
+  udeps:
+    executor: makepress-orb/rust
+    steps:
+      - checkout
+      - makepress-orb/with-rust:
+          steps:
+            - run: just udeps
+
+orbs:
+  makepress-orb: makepress/makepress-orb@2.1.0
+  aws-ecr: circleci/aws-ecr@7.3.0
