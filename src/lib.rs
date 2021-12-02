@@ -16,6 +16,8 @@ pub enum Error {
     IOError(#[from] std::io::Error),
     #[error("Unknown error")]
     Unknown,
+    #[error("Other error: `{0}`")]
+    Other(#[from] Box<dyn std::error::Error>),
 }
 
 type Result<T> = std::result::Result<T, Error>;
