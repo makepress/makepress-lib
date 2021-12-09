@@ -21,9 +21,7 @@ workflows:
             - makepress-orb/release-please-single
           filters:
             branches:
-              ignore: /.*/
-            tags:
-              only: /^v.*/
+              only: main
 
 jobs:
   check:
