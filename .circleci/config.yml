@@ -12,6 +12,19 @@ workflows:
           context: [aws]
       - makepress-orb/release-please-single:
           context: [lulubot]
+      - makepress-orb/publish-crates:
+          context: [cargo, aws]
+          requires:
+            - check
+            - test
+            - udeps
+            - makepress-orb/release-please-single
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.*/
+
 jobs:
   check:
     executor: makepress-orb/rust
