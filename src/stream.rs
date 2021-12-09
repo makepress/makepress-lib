@@ -39,7 +39,7 @@ where
 impl<St, M> Stream for GetMapper<St, M>
 where
     St: Stream,
-    St::Item: AsRef<str> + 'static,
+    St::Item: AsRef<str> + Send + 'static,
     M: MakepressManager + 'static,
 {
     type Item = crate::Result<InstanceInfo>;
@@ -91,7 +91,7 @@ where
 impl<St, M> Stream for CreateMapper<St, M>
 where
     St: Stream,
-    St::Item: AsRef<str> + 'static,
+    St::Item: AsRef<str> + Send + 'static,
     M: MakepressManager + 'static,
 {
     type Item = crate::Result<InstanceInfo>;
@@ -144,7 +144,7 @@ where
 impl<St, M> Stream for StartMapper<St, M>
 where
     St: Stream,
-    St::Item: AsRef<str> + 'static,
+    St::Item: AsRef<str> + Send + 'static,
     M: MakepressManager + 'static,
 {
     type Item = crate::Result<InstanceInfo>;
@@ -197,7 +197,7 @@ where
 impl<St, M> Stream for StopMapper<St, M>
 where
     St: Stream,
-    St::Item: AsRef<str> + 'static,
+    St::Item: AsRef<str> + Send + 'static,
     M: MakepressManager + 'static,
 {
     type Item = crate::Result<InstanceInfo>;
@@ -228,7 +228,7 @@ pin_project! {
         stream: St,
         manager: &'static M,
         #[pin]
-        pending_fut: Option<Pin<Box<dyn Future<Output = crate::Result<InstanceInfo>>>>>,
+        pending_fut: Option<Pin<Box<dyn Future<Output = crate::Result<()>>>>>,
     }
 }
 
@@ -249,10 +249,10 @@ where
 impl<St, M> Stream for DestroyMapper<St, M>
 where
     St: Stream,
-    St::Item: AsRef<str> + 'static,
+    St::Item: AsRef<str> + Send + 'static,
     M: MakepressManager + 'static,
 {
-    type Item = crate::Result<InstanceInfo>;
+    type Item = crate::Result<()>;
 
     fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         let mut this = self.project();
