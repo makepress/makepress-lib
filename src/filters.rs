@@ -14,20 +14,26 @@ fn with_manager<T: MakepressManager + Send>(
     warp::any().map(move || manager.clone())
 }
 
-fn get_container<T: MakepressManager + Send + Sync>(
-    manager: T,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    warp::path!("get" / String)
-        .and(warp::get())
-        .and(with_manager(manager))
-        .and_then(crate::handlers::get_container)
+macro_rules! create_filter {
+    ($($name:ident => {$path:expr, $method:ident, $handler:ident}),*,) => {
+        create_filter!($($name => {$path, $method, $handler}),*);
+    };
+    ($($name:ident => {$path:expr, $method:ident, $handler:ident}),*) => {
+        $(create_filter!($name => {$path, $method, $handler}));*
+    };
+    ($name:indent => {$path:expr, $method:ident, $handler:ident}) => {
+        fn $name<T: MakepressManager + Send + Sync>(
+            manager: T,
+        ) -> impl Filter<Extract = (T,), Error = std::convert::Infallible> + Clone {
+            warp::path!($path)
+                .and(warp::$method())
+                .and(with_manager(manager))
+                .and_then(crate::handlers::$handler)
+        }
+    };
 }
 
-fn create_container<T: MakepressManager + Send + Sync>(
-    manager: T,
-) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    warp::path!("create" / String)
-        .and(warp::post())
-        .and(with_manager(manager))
-        .and_then(crate::handlers::create_container)
-}
+create_filter!(
+    get_container => {"get" / String, get, get_container},
+    create_container => {"create" / String, post, create_container},
+);
