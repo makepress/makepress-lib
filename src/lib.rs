@@ -4,6 +4,7 @@ use async_trait::async_trait;
 use futures::Stream;
 use serde::Serialize;
 use thiserror::Error;
+pub use uuid;
 
 use stream::{CreateMapper, DestroyMapper, GetMapper, StartMapper, StopMapper};
 
@@ -49,6 +50,18 @@ pub struct InstanceInfo {
 pub struct CreateInfo {
     pub name: String,
     pub access_url: String,
+}
+
+#[derive(Serialize)]
+pub struct BackupAcceptedResponse {
+    pub job_id: uuid::Uuid,
+}
+
+#[derive(Serialize)]
+pub struct BackupCheckResponse {
+    pub status: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub access_url: Option<String>,
 }
 
 #[async_trait]
@@ -98,4 +111,8 @@ pub trait MakepressManager: Sized + Clone {
     {
         DestroyMapper::new(self, names)
     }
+
+    async fn start_backup<T: AsRef<str> + Send>(&self, name: T) -> Result<BackupAcceptedResponse>;
+    async fn check_backup(&self, name: uuid::Uuid) -> Result<BackupCheckResponse>;
+    async fn cancel_backup(&self, name: uuid::Uuid) -> Result<()>;
 }
