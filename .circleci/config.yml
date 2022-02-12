@@ -8,8 +8,6 @@ workflows:
           context: [aws]
       - test:
           context: [aws]
-      - udeps:
-          context: [aws]
       - makepress-orb/release-please-single:
           context: [lulubot]
       - makepress-orb/publish-crates:
@@ -17,7 +15,6 @@ workflows:
           requires:
             - check
             - test
-            - udeps
             - makepress-orb/release-please-single
           filters:
             branches:
@@ -38,14 +35,6 @@ jobs:
       - makepress-orb/with-rust:
           steps:
             - run: just test
-  udeps:
-    executor: makepress-orb/rust
-    steps:
-      - checkout
-      - makepress-orb/with-rust:
-          steps:
-            - run: just udeps
-
 orbs:
   makepress-orb: makepress/makepress-orb@2.2.0
   aws-ecr: circleci/aws-ecr@7.3.0
