@@ -23,10 +23,9 @@ macro_rules! __internal_create_handler {
     };
     (@munch $name:ident => $method:ident, $($tail:tt)*) => {
         pub(crate) async fn $name<T: MakepressManager>(
-            param: String,
             manager: T
         ) -> Result<impl warp::Reply, Rejection> {
-            match manager.$method(param).await {
+            match manager.$method().await {
                 Ok(res) => Ok(warp::reply::json(&res)),
                 Err(e) => Err(warp::reject::custom(e))
             }
@@ -59,12 +58,13 @@ macro_rules! __internal_create_handler {
 }
 
 create_handler!(
-    create_instance => create,
-    get_instance => get,
-    start_instance => start,
-    stop_instance => stop,
-    destroy_instance => destroy,
-    create_backup => start_backup,
+    list_instances => list,
+    create_instance(String) => create,
+    get_instance(String) => get,
+    start_instance(String) => start,
+    stop_instance(String) => stop,
+    destroy_instance(String) => destroy,
+    create_backup(String) => start_backup,
     check_backup(uuid::Uuid) => check_backup,
     cancel_backup(uuid::Uuid) => cancel_backup
 );

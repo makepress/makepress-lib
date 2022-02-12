@@ -66,7 +66,7 @@ pub struct BackupCheckResponse {
 
 #[async_trait]
 pub trait MakepressManager: Sized + Clone {
-    //async fn get_all(&self) -> Vec<Result<InstanceInfo>>;
+    async fn list(&self) -> Result<Vec<String>>;
     async fn get<T: AsRef<str> + Send>(&self, name: T) -> Result<InstanceInfo>;
     async fn get_many<S>(&'static self, names: S) -> GetMapper<S, Self>
     where
@@ -112,7 +112,7 @@ pub trait MakepressManager: Sized + Clone {
         DestroyMapper::new(self, names)
     }
 
-    async fn start_backup<T: AsRef<str> + Send>(&self, name: T) -> Result<BackupAcceptedResponse>;
+    async fn start_backup<T: AsRef<str> + Send + Sync + 'static>(&self, name: T) -> Result<BackupAcceptedResponse>;
     async fn check_backup(&self, name: uuid::Uuid) -> Result<BackupCheckResponse>;
     async fn cancel_backup(&self, name: uuid::Uuid) -> Result<()>;
 }

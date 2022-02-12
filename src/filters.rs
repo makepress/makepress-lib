@@ -42,6 +42,7 @@ all_body!(
         | start_backup
         | check_backup
         | cancel_backup
+        | list_instances
 );
 
 fn with_manager<T: MakepressManager + Send>(
@@ -116,6 +117,7 @@ macro_rules! __internal_filter {
 }
 
 filter!(
+    GET "instance" = list_instances => list_instances;
     POST "instance" / String = create_instance => create_instance;
     GET "instance" / String = get_instance => get_instance;
     PUT "instance" / String / "start" = start_instance => start_instance;
