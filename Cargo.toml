@@ -8,7 +8,7 @@ publish = ["makepress"]
 
 [dependencies]
 async-trait = "0.1.52"
-futures = "0.3.19"
+futures = "0.3.21"
 pin-project-lite = "0.2.8"
 serde = {version = "1.0.132", features = ["derive"]}
 thiserror = "1.0.30"
