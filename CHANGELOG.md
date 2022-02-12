@@ -1,5 +1,15 @@
 # Changelog
 
+### [2.0.1](https://www.github.com/makepress/makepress-lib/compare/v2.0.0...v2.0.1) (2022-02-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency rust to v1.58.1 ([7a105c1](https://www.github.com/makepress/makepress-lib/commit/7a105c11d27314cd571098901306cfb2160524e5))
+* **deps:** update rust crate futures to 0.3.21 ([46f0516](https://www.github.com/makepress/makepress-lib/commit/46f05165dc90f20ed730c6ec12433d2f4d323934))
+* **deps:** update rust crate pin-project-lite to 0.2.8 ([264854b](https://www.github.com/makepress/makepress-lib/commit/264854b4c651c404fe03fe4210596d2e15db7075))
+* **deps:** update rust crate serde to 1.0.136 ([de53884](https://www.github.com/makepress/makepress-lib/commit/de538843d585d8e24cc51ff557d86e121eb2a1ed))
+
 ## [2.0.0](https://www.github.com/makepress/makepress-lib/compare/v1.0.0...v2.0.0) (2021-12-20)
 
 
