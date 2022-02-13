@@ -1,6 +1,7 @@
 use warp::Rejection;
 
-use crate::MakepressManager;
+use crate::{MakepressManager, CreateInfo};
+
 
 macro_rules! create_handler {
     ($($peices:tt)*) => {__internal_create_handler!{@start $($peices)*}};
@@ -9,6 +10,19 @@ macro_rules! create_handler {
 macro_rules! __internal_create_handler {
     (@start) => {};
     (@start $first:tt $($tail:tt)*) => {__internal_create_handler!{@munch $first $($tail)*}};
+    (@munch $name:ident($type1:ty, $type2:ty) => $method:ident, $($tail:tt)*) => {
+        pub(crate) async fn $name<T: MakepressManager>(
+            param1: $type1,
+            param2: $type2,
+            manager: T
+        ) -> Result<impl warp::Reply, Rejection> {
+            match manager.$method(param1, param2).await {
+                Ok(res) => Ok(warp::reply::json(&res)),
+                Err(e) => Err(warp::reject::custom(e))
+            }
+        }
+        __internal_create_handler!{@munch $($tail)*}
+    };
     (@munch $name:ident($type:ty) => $method:ident, $($tail:tt)*) => {
         pub(crate) async fn $name<T: MakepressManager>(
             param: $type,
@@ -59,7 +73,7 @@ macro_rules! __internal_create_handler {
 
 create_handler!(
     list_instances => list,
-    create_instance(String) => create,
+    create_instance(String, CreateInfo) => create,
     get_instance(String) => get,
     start_instance(String) => start,
     stop_instance(String) => stop,

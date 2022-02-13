@@ -78,6 +78,12 @@ macro_rules! __internal_filter {
     (@path $sum:expr; [$cur:tt] [= $next:tt $($tail:tt)*]) => (
         __internal_filter!(@name $sum.and(__internal_filter!(@segment $cur)); [$next] [$($tail)*]);
     );
+    (@path $sum:expr; [$cur:tt] [$next:tt $($tail:tt)*]) => (
+        __internal_filter!(@body $sum.and(__internal_filter!(@segment $cur)); [$next] [$($tail)*]);
+    );
+    (@body $sum:expr; [JSON] [= $next:tt $($tail:tt)*]) => (
+        __internal_filter!(@name $sum.and(warp::body::json()); [$next] [$($tail)*]);
+    );
     (@name $sum:expr; [$name:ident] [=> $handler:ident]) => (
         fn $name<T: MakepressManager + Send + Sync>(
             manager: T
@@ -118,7 +124,7 @@ macro_rules! __internal_filter {
 
 filter!(
     GET "instance" = list_instances => list_instances;
-    POST "instance" / String = create_instance => create_instance;
+    POST "instance" / String JSON = create_instance => create_instance;
     GET "instance" / String = get_instance => get_instance;
     PUT "instance" / String / "start" = start_instance => start_instance;
     PUT "instance" / String / "stop" = stop_instance => stop_instance;
@@ -127,3 +133,4 @@ filter!(
     GET "backup" / Uuid = check_backup => check_backup;
     DELETE "backup" / Uuid = cancel_backup => cancel_backup;
 );
+

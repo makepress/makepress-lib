@@ -104,7 +104,7 @@ where
                 this.pending_fut.set(None);
                 break Some(res);
             } else if let Some(name) = ready!(this.stream.as_mut().poll_next(cx)) {
-                this.pending_fut.set(Some(this.manager.create(name)));
+                this.pending_fut.set(Some(this.manager.create(name, crate::CreateInfo { host_type: crate::HostType::Managed })));
             } else {
                 break None;
             }

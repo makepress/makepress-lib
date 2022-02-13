@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use async_trait::async_trait;
 use futures::Stream;
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 use thiserror::Error;
 pub use uuid;
 
@@ -45,11 +45,18 @@ pub struct InstanceInfo {
     pub database_status: Status,
     pub created: i64,
     pub labels: HashMap<String, String>,
+    pub host_type: HostType
 }
 
+#[derive(Serialize, Deserialize)]
+pub enum HostType {
+    Managed,
+    Unmanaged,
+}
+
+#[derive(Deserialize)]
 pub struct CreateInfo {
-    pub name: String,
-    pub access_url: String,
+    pub host_type: HostType
 }
 
 #[derive(Serialize)]
@@ -76,7 +83,7 @@ pub trait MakepressManager: Sized + Clone {
         GetMapper::new(self, names)
     }
 
-    async fn create<T: AsRef<str> + Send>(&self, name: T) -> Result<InstanceInfo>;
+    async fn create<T: AsRef<str> + Send>(&self, name: T, options: CreateInfo) -> Result<InstanceInfo>;
     async fn create_many<S>(&'static self, names: S) -> CreateMapper<S, Self>
     where
         S: Stream + Send,
