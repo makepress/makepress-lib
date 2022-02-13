@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.0.0](https://www.github.com/makepress/makepress-lib/compare/v2.1.0...v3.0.0) (2022-02-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* Added unmanaged hosting type
+
+### Features
+
+* Added unmanaged hosting type ([604e1b1](https://www.github.com/makepress/makepress-lib/commit/604e1b1611a0d7d60d824981489f77ce7862ce5e))
+
+
+### Bug Fixes
+
+* **deps:** update makepress-orb orb to v2.3.0 ([51e947e](https://www.github.com/makepress/makepress-lib/commit/51e947ebe738eb0a1eb44888183d300863dc9002))
+
 ## [2.1.0](https://www.github.com/makepress/makepress-lib/compare/v2.0.0...v2.1.0) (2022-02-12)
 
 
