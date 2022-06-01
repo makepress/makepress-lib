@@ -13,4 +13,4 @@ pin-project-lite = "0.2.9"
 serde = {version = "1.0.137", features = ["derive"]}
 thiserror = "1.0.30"
 warp = "0.3.2"
-uuid = {version = "1.1.0", features = ["serde", "v4"]}
+uuid = {version = "1.1.1", features = ["serde", "v4"]}
