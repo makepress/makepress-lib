@@ -37,4 +37,4 @@ jobs:
             - run: just test
 orbs:
   makepress-orb: makepress/makepress-orb@2.4.1
-  aws-ecr: circleci/aws-ecr@8.1.3
+  aws-ecr: circleci/aws-ecr@8.2.0
